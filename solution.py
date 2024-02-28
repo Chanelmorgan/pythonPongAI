@@ -102,6 +102,8 @@ def main():
 
         draw(WIN, [left_paddle, right_paddle], ball)
 
+        ball.move()
+
     pygame.quit()
 
 

@@ -11,10 +11,10 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
-PADDLE_SPEED = 5
 
 class Paddle:
     COLOR = WHITE
+    VEL = 4
 
     def __init__(self, x, y, width, height):
         self.x = x
@@ -25,11 +25,29 @@ class Paddle:
     def draw(self, win):
         pygame.draw.rect(win, self.COLOR, (self.x, self.y, self.width, self.height))
 
+    def move(self, up=True):
+        if up:
+            self.y -= self.VEL
+        else:
+            self.y += self.VEL
+
 def draw(win, paddles):
     win.fill(BLACK)
     for paddle in paddles:
         paddle.draw(win)
     pygame.display.update()
+
+
+def handle_paddle_movement(keys, left_paddle, right_paddle):
+    if keys[pygame.K_w]:
+        left_paddle.move(up=True)
+    if keys[pygame.K_s]:
+        left_paddle.move(up=False)
+
+    if keys[pygame.K_UP]:
+        right_paddle.move(up=True)
+    if keys[pygame.K_DOWN]:
+        right_paddle.move(up=False)
 
 def main():
     run = True
@@ -47,10 +65,8 @@ def main():
                 run = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP] and left_paddle.y > 0:
-            left_paddle.y -= PADDLE_SPEED
-        if keys[pygame.K_DOWN] and left_paddle.y < HEIGHT - left_paddle.height:
-            left_paddle.y += PADDLE_SPEED
+        handle_paddle_movement(keys, left_paddle, right_paddle)
+
 
         draw(WIN, [left_paddle, right_paddle])
 

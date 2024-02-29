@@ -42,8 +42,8 @@ class Ball:
     COLOR = WHITE
 
     def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
+        self.x = self.orginal_x = x
+        self.y = self.orginal_y = y
         self.radius = radius
         self.x_vel = self.MAX_VEL
         self.y_vel = 0
@@ -56,6 +56,10 @@ class Ball:
         self.y += self.y_vel
 
     def reset(self):
+        self.x = self.orginal_x
+        self.y = self.orginal_y
+        self.y_vel = 0
+        self.x_vel *= -1
 
 
 def draw(win, paddles, ball, left_score, right_score):
@@ -152,8 +156,10 @@ def main():
 
         if ball.x < 0:
             right_score += 1
+            ball.reset()
         elif ball.x > WIDTH:
             left_score += 1
+            ball.reset()
 
     pygame.quit()
 

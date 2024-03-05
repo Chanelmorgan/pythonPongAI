@@ -10,7 +10,9 @@ window = pygame.display.set_mode((WIDTH, HEIGHT))
 
 game = Game(window, WIDTH, HEIGHT)
 run = True
+clock = pygame.time.Clock()
 while run:
+    clock.tick(60) # limits how fast the game goes
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False

@@ -4,6 +4,18 @@ import neat
 import os
 import pickle
 
+
+class PongGame:
+    def __init__(self, window, width, height):
+        self.game = Game(window, width, height)
+        self.left_paddle = self.game_left_paddle
+        self.right_paddle = self.game_right_paddle
+        self.ball = self.game.ball
+
+
+
+
+
 # setting up the game
 WIDTH, HEIGHT = 700, 500
 window = pygame.display.set_mode((WIDTH, HEIGHT))

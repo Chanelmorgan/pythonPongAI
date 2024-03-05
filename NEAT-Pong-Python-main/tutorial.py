@@ -17,8 +17,16 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             break
-    game.loop()
-    game.draw()
+    # allows us to move the left paddle
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        game.move_paddle(left=True, up=True)
+    if keys[pygame.K_s]:
+        game.move_paddle(left=True, up=False)
+
+    game_info = game.loop()
+    print(game_info.left_score, game_info.right_score)
+    game.draw(False, True) # shows the combined hits
     pygame.display.update()
 
 pygame.quit()

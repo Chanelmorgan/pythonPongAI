@@ -35,9 +35,42 @@ class PongGame:
 
         pygame.quit()
 
+    def train_ai(self, genome1, genome2, config):
+        net1 = neat.nn.FeedForwardNetwork.create(genome1, config)
+        net2 = neat.nn.FeedForwardNetwork.create(genome2, config)
+
+        run = True
+        while run:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+            output1 = net1.activate(self.left_paddle.y, self.ball.y, abs(self.left_paddle.x - self.ball.x))
+            output2 = net2.activate(self.right_paddle.y, self.ball.y, abs(self.right_paddle.x - self.ball.x))
+            game_info = self.game.loop()
+            self.game.draw()
+            pygame.display.update()
+
+            if game_info.left_score >= 1 or game_info.right_score >= 1:
+                self.calculate_fitness(genome1, genome2, game_info)
+                break
+
+
+def calulate_fitness(genome1, genome2, game_info):
+    pass
+
 
 def eval_genomes(genomes, config):
+    width, height = 700, 500
+    window = pygame.display.set_mode((width, height))
 
+    for i, (genomes_id1, genome1) in enumerate(genomes):
+        if i == len(genomes) - 1:
+            break
+        genome1.fitness = 0
+        for genome_id2, genome2 in genomes[i + 1:]:
+            genome2.fitness = 0 if genome2.fitness == None else genome2.fitness
+            game = PongGame(window, width, height)
+            game.train_ai(genome1, genome2, config)
 
 
 def run_neat(config):
@@ -51,16 +84,12 @@ def run_neat(config):
     winner = p.run(eval_genomes, 50)
 
 
-
-
 if __name__ == "__main__":
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "config.txt")
     config = neat.Config(neat.DefaultGenome, neat.DefaultReproduction, neat.DefaultSpeciesSet, neat.DefaultStagnation,
                          config_path)
     run_neat(config)
-
-
 
 # setting up the game
 WIDTH, HEIGHT = 700, 500
